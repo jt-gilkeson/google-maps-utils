@@ -75,7 +75,7 @@ MarkerSelectionAnimator mMarkerAnimator = new MarkerSelectionAnimator()
 	@Override
 	public void animationFinished(Marker marker)
 	{
-    // Set the marker to the finished state
+          // Set the marker to the finished state
 	}
 };
 
