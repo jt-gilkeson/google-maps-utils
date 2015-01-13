@@ -65,7 +65,7 @@ You can use the MarkerSelectionAnimator by setting your GoogleMap MarkerClickLis
 ```java
 MarkerSelectionAnimator mMarkerAnimator = new MarkerSelectionAnimator()
 {
-  @Override
+	@Override
 	public void performAnimation(Marker marker, float t)
 	{
 	  // Do something with your marker based on the interpolated t value
