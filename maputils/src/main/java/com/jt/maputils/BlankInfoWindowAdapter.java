@@ -1,6 +1,6 @@
 package com.jt.maputils;
 
-import android.app.Activity;
+import android.view.LayoutInflater;
 import android.view.View;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -13,9 +13,9 @@ public class BlankInfoWindowAdapter implements GoogleMap.InfoWindowAdapter
 {
 	private final View mBlankInfoWindow;
 
-	public BlankInfoWindowAdapter(Activity activity)
+	public BlankInfoWindowAdapter(LayoutInflater inflater)
 	{
-		mBlankInfoWindow = activity.getLayoutInflater().inflate(R.layout.no_info_window, null);
+		mBlankInfoWindow = inflater.inflate(R.layout.no_info_window, null);
 	}
 
 	// Hack to prevent info window from displaying: use a 0dp/0dp frame
