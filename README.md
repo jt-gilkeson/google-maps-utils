@@ -68,14 +68,14 @@ MarkerSelectionAnimator mMarkerAnimator = new MarkerSelectionAnimator()
   @Override
 	public void performAnimation(Marker marker, float t)
 	{
-	  // Do something with your marker based on the interpolated t
+	  // Do something with your marker based on the interpolated t value
 	  // i.e. marker.setIcon, marker.setAlpha, marker.setPosition, etc.
 	}
 
 	@Override
 	public void animationFinished(Marker marker)
 	{
-          // Set the marker to the finished state
+	  // Set the marker to the finished state
 	}
 };
 
