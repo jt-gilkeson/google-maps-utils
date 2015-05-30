@@ -42,42 +42,28 @@ public abstract class MapStateListener
 	private final GoogleMap      mMap;
 	private       CameraPosition mLastPosition;
 
-	private Runnable settleMapTask = new Runnable()
-	{
-		@Override
-		public void run()
-		{
-			CameraPosition currentPosition = mMap.getCameraPosition();
-
-			if (currentPosition.equals(mLastPosition))
-			{
-				settleMap();
-			}
-			else
-			{
-				runSettleTimer();
-			}
-		}
-	};
-
-	public MapStateListener(GoogleMap map, TouchableMapFragment touchableMapFragment)
+	public MapStateListener(GoogleMap map, TouchableMapFragment touchableMapFragment,
+							boolean trackCameraChanges)
 	{
 		mMap = map;
 
 		mHandler = new Handler();
 
-		map.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener()
+		if (trackCameraChanges)
 		{
-			@Override
-			public void onCameraChange(CameraPosition cameraPosition)
+			map.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener()
 			{
-				unsettleMap();
-				if (!mMapTouched)
+				@Override
+				public void onCameraChange(CameraPosition cameraPosition)
 				{
-					runSettleTimer();
+					unsettleMap();
+					if (!mMapTouched)
+					{
+						runSettleTimer();
+					}
 				}
-			}
-		});
+			});
+		}
 
 		touchableMapFragment.setTouchListener(new TouchableWrapper.OnTouchListener()
 		{
@@ -94,40 +80,45 @@ public abstract class MapStateListener
 				releaseMap();
 				runSettleTimer();
 			}
+
+			@Override
+			public void onMove()
+			{
+				onMapMoved();
+			}
 		});
 	}
 
-	private void runSettleTimer()
-	{
-		mHandler.removeCallbacks(settleMapTask);
-		mLastPosition = mMap.getCameraPosition();
-		mHandler.postDelayed(settleMapTask, SETTLE_TIME);
-	}
+	/**
+	 * Called when the user touches the map.
+	 */
+	public abstract void onMapTouched();
 
-	private synchronized void releaseMap()
-	{
-		if (mMapTouched)
-		{
-			mMapTouched = false;
-			onMapReleased();
-		}
-	}
+	/**
+	 * Called when the user releases the map.
+	 */
+	public abstract void onMapReleased();
 
-	private void touchMap()
-	{
-		if (!mMapTouched)
-		{
-			mHandler.removeCallbacks(settleMapTask);
-			mMapTouched = true;
-			onMapTouched();
-		}
-	}
+	/**
+	 * Called a maximum of once per touch if the user has moved the map beyond the predefined threshold.
+	 */
+	public abstract void onMapMoved();
+
+	/**
+	 * Called when the map has stared moving.
+	 */
+	public abstract void onMapUnsettled();
+
+	/**
+	 * Called when the map stops animating for a predefined period of time.
+	 */
+	public abstract void onMapSettled();
 
 	public void unsettleMap()
 	{
 		if (mMapSettled)
 		{
-			mHandler.removeCallbacks(settleMapTask);
+			mHandler.removeCallbacks(mSettleMapTask);
 			mMapSettled = false;
 			mLastPosition = null;
 			onMapUnsettled();
@@ -143,11 +134,55 @@ public abstract class MapStateListener
 		}
 	}
 
-	public abstract void onMapTouched();
+	/**
+	 * Force map into settle state without firing listener.
+	 */
+	public void resetSettle()
+	{
+		mMapSettled = true;
+	}
 
-	public abstract void onMapReleased();
+	private void runSettleTimer()
+	{
+		mHandler.removeCallbacks(mSettleMapTask);
+		mLastPosition = mMap.getCameraPosition();
+		mHandler.postDelayed(mSettleMapTask, SETTLE_TIME);
+	}
 
-	public abstract void onMapUnsettled();
+	private synchronized void releaseMap()
+	{
+		if (mMapTouched)
+		{
+			mMapTouched = false;
+			onMapReleased();
+		}
+	}
 
-	public abstract void onMapSettled();
+	private void touchMap()
+	{
+		if (!mMapTouched)
+		{
+			mHandler.removeCallbacks(mSettleMapTask);
+			mMapTouched = true;
+			onMapTouched();
+		}
+	}
+
+	private Runnable mSettleMapTask = new Runnable()
+	{
+		@Override
+		public void run()
+		{
+			CameraPosition currentPosition = mMap.getCameraPosition();
+
+			if (currentPosition.equals(mLastPosition))
+			{
+				settleMap();
+			}
+			else
+			{
+				runSettleTimer();
+			}
+		}
+	};
 }
