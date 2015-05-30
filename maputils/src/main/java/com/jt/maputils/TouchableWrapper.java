@@ -32,18 +32,18 @@ public class TouchableWrapper extends FrameLayout
 		/**
 		 * Called when the user touches the layout.
 		 */
-		public void onTouch();
+		void onTouch();
 
 		/**
 		 * Called when the user releases the layout.
 		 */
-		public void onRelease();
+		void onRelease();
 
 		/**
 		 * Called a maximum of once per touch if the user has touched and dragged their finger
 		 * beyond the predefined threshold.
 		 */
-		public void onMove();
+		void onMove();
 	}
 
 	// Movement trigger sensitivity
