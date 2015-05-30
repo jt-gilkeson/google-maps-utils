@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2015 J.T. Gilkeson
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.jt.maputils;
 
 import android.os.Handler;
@@ -5,9 +21,18 @@ import android.os.Handler;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.CameraPosition;
 
+/**
+ * MapStateListener can be used to receive callbacks from the GoogleMap inside a TouchableMapFragment
+ * for when the map settles or unsettles, is touched or released.
+ *
+ * Settling the map means that the map has finished scrolling, zooming or animating in any way and
+ * is not currently being touched.
+ *
+ * Forked from: https://github.com/madsbf/MapStateListener
+ */
 public abstract class MapStateListener
 {
-	private static final int SETTLE_TIME = 250;
+	private static final int SETTLE_TIME = 500;
 
 	private boolean mMapTouched = false;
 	private boolean mMapSettled = false;
