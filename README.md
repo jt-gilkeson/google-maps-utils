@@ -1,6 +1,18 @@
 # google-maps-utils
 Library of helpers for Google Maps on Android
 
+### Installation
+Add the following dependency to your build.gradle file
+```xml
+	repositories {
+		maven { url "https://jitpack.io" }
+	}
+	
+	dependencies {
+		compile 'com.github.jt-gilkeson:google-maps-utils:1.0'
+	}
+```
+
 ## BlankInfoWindowAdapter
 
 The BlankInfoWindowAdapter can be used to bring GoogleMap pins to the front (change z-index) when selected, without showing the info window above the pin.
